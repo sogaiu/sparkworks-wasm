@@ -15,24 +15,22 @@
      {:player player 
       :pause-menu pause-menu
       # XXX
-      #:start-music start-music
+      :start-music start-music
       # XXX
-      #:level-music level-music
+      :level-music level-music
       :restart-menu restart-menu
       :tilemap tilemap}}
     state)
 
   # XXX
-  (comment
   (when start-music
     (put-in state [:state :start-music] false)
     # XXX
     (setdyn :music level-music)
-    #(put root-env :music level-music)
+    (put root-env :music level-music)
     (play-music-stream level-music)
     (set-music-volume level-music 1))
   (update-music-stream level-music)
-  )
 
   (def mpos (get-mouse-position))
   (def [mx my] mpos)
@@ -81,6 +79,7 @@
   (when paused (:draw pause-menu)))
 
 (defn init [assets] 
+  (init-audio-device)
   (def tilemap 
     (init-tilemap 
       assets
@@ -122,9 +121,9 @@
      :cursor cursor
      :pause-menu pause-menu
      # XXX
-     #:start-music true
+     :start-music true
      # XXX
-     #:level-music (assets :level1-music)
+     :level-music (assets :level1-music)
      :restart-menu  restart-menu
      :tilemap tilemap }
    :update update-level

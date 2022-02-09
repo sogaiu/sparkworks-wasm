@@ -21,7 +21,7 @@
   (def clicked (and (mouse-button-pressed? :left) hovered))
   (when clicked
     # XXX
-    #(play-sound (entry :click-sound))
+    (play-sound (entry :click-sound))
     ((entry :on-click) menu switch)))
 
 (defn- draw-menu-entry [entry] 
@@ -43,7 +43,7 @@
     :size size
     :color color
     # XXX
-    #:click-sound (assets :click-sound)
+    :click-sound (assets :click-sound)
     :hovered false
     :update update-menu-entry
     :draw draw-menu-entry

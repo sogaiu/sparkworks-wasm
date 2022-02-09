@@ -45,7 +45,7 @@
   (set state (start-menu/init assets))
   (math/seedrandom (os/time)))
 
-'(defn main [& args]
+(defn main [& args]
   (set-trace-log-level :error)
   (init-window 1200 800 "Spark works")
   (init-audio-device)
@@ -57,7 +57,7 @@
 # XXX
 (set-trace-log-level :error)
 (init-window 1200 800 "Spark works")
-#(init-audio-device)
+(init-audio-device)
 #(set-target-fps 60)
 (hide-cursor)
 (def assets (load-assets)) 
@@ -65,18 +65,19 @@
 (put assets :level1/init level1/init)
 (setdyn :assets assets)
 (set state (start-menu/init assets))
+(math/seedrandom (os/time))
 
-(def main-fiber
-  (fiber/new
-    (fn []
-      (math/seedrandom (os/time))
-      (while (not (window-should-close))
-        (:update state (get-frame-time) switch-state)
-        (begin-drawing)
-        (:draw state)
-        (end-drawing)
-        (yield))
-      (close-window)
-      (cleanup-assets))
-    :i))
+# Start running the game
+(while (not (window-should-close))
+  (:update state (get-frame-time) switch-state)
+  (begin-drawing)
+  (:draw state)
+  (end-drawing))
+(close-window)
+(cleanup-assets)
+
+#(def main-fiber
+#  (fiber/new
+#    (fn []
+#    :i))
   
