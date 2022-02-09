@@ -86,6 +86,7 @@
                "-s" "ASSERTIONS=2"
                "-s" "ALLOW_MEMORY_GROWTH=1"
                "-s" "FORCE_FILESYSTEM=1"
+               "-s" "INITIAL_MEMORY=64MB"
                "-s" "USE_GLFW=3"
                "-s" `EXPORTED_RUNTIME_METHODS=['cwrap']`
                "-s" "AGGRESSIVE_VARIABLE_ELIMINATION=1"]
