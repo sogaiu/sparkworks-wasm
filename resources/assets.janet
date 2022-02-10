@@ -151,9 +151,8 @@
   return-value)
 
 (defn cleanup-assets [] 
-  (def assets (dyn :assets))
-  # XXX
-  #(unload-music-stream (assets :level1-music))
+  (def assets (get root-env :assets))
+  (unload-music-stream (assets :level1-music))
   (os/rm "music1.ogg"))
 
 (defn load-assets [] 
@@ -161,18 +160,13 @@
   (def tile-size [17 17])
 
   (def core-tex (spitball text.png "png" load-texture))
-  # XXX
-  #(def click-audio (spitball click-audio "wav" load-sound))
-  # XXX
-  #(def thump-sound (spitball thump-sound "wav" load-sound))
+  (def click-audio (spitball click-audio "wav" load-sound))
+  (def thump-sound (spitball thump-sound "wav" load-sound))
   (spit "music1.ogg" music-data)
-  # XXX
-  #(def level1-music (load-music-stream "music1.ogg"))
+  (def level1-music (load-music-stream "music1.ogg"))
 
-  # XXX
-  #(set-sound-volume thump-sound 0.2)
-  # XXX
-  #(set-music-volume level1-music 0.2)
+  (set-sound-volume thump-sound 0.2)
+  (set-music-volume level1-music 0.2)
 
   (def tmap 
     { 
@@ -201,12 +195,9 @@
   @{:tileset tmap 
    :player-run-cycle player-run-cycle
    :player-stand-cycle player-stand-cycle
-   # XXX
-   #:click-sound click-audio
-   # XXX
-   #:thump-sound thump-sound
-   # XXX
-   #:level1-music level1-music
+   :click-sound click-audio
+   :thump-sound thump-sound
+   :level1-music level1-music
    :cursor { :draw (fn [_ x y] (draw-cursor tmap :mouse [x y ;(map |(* 2 $) tile-size)])) }
    })
 

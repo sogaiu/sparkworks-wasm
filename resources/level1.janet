@@ -10,29 +10,22 @@
 (import ./button)
 
 (defn update-level [state dt switch-state]
-  (def 
-    {:state 
-     {:player player 
+  (def
+    {:state
+     {:player player
       :pause-menu pause-menu
-      # XXX
-      #:start-music start-music
-      # XXX
-      #:level-music level-music
+      :start-music start-music
+      :level-music level-music
       :restart-menu restart-menu
       :tilemap tilemap}}
     state)
 
-  # XXX
-  (comment
   (when start-music
     (put-in state [:state :start-music] false)
-    # XXX
-    (setdyn :music level-music)
-    #(put root-env :music level-music)
+    (put root-env :music level-music)
     (play-music-stream level-music)
     (set-music-volume level-music 1))
   (update-music-stream level-music)
-  )
 
   (def mpos (get-mouse-position))
   (def [mx my] mpos)
@@ -53,9 +46,9 @@
     (:update player dt tilemap)))
 
 (defn draw-level [state]
-  (def {:state 
-        {:player player 
-         :tilemap tilemap 
+  (def {:state
+        {:player player
+         :tilemap tilemap
          :cursor cursor
          :restart-menu restart-menu
          :pause-menu pause-menu }} state)
@@ -73,16 +66,16 @@
     (draw-text (string (:unlit-remain tilemap) " sparks remain")
                  5 (- 800 32) 32 [1 1 1])
     (draw-text (credits/get :music) 400 (- 800 32) 32 [1 1 1])
-  
+
   (when restart-available
     (:draw restart-menu))
   (:draw cursor mx my)
   (def paused (pause-menu :shown))
   (when paused (:draw pause-menu)))
 
-(defn init [assets] 
-  (def tilemap 
-    (init-tilemap 
+(defn init [assets]
+  (def tilemap
+    (init-tilemap
       assets
       (assets :tileset) @{}))
 
@@ -99,17 +92,17 @@
 
   (def cursor (assets :cursor))
   (def start-menu/init (assets :start-menu/init))
-  (def pause-menu 
+  (def pause-menu
     (menu/init assets [
-       (button/init "Resume game" [80 160] 80 [1 1 1] 
-                    (fn [menu switch] 
+       (button/init "Resume game" [80 160] 80 [1 1 1]
+                    (fn [menu switch]
                       (put menu :shown false)))
-       (button/init "Back to Menu" [80 240] 80 [1 1 1] 
+       (button/init "Back to Menu" [80 240] 80 [1 1 1]
                     (fn [menu switch] (switch  (start-menu/init assets))))]
                {:toggle-key :p}
                ))
   (def restart-menu
-    (menu/init 
+    (menu/init
       assets
       [
        (button/init "Play again!" [80 160] 80 [1 1 1]
@@ -121,10 +114,8 @@
    @{:player (init-player assets 20 20)
      :cursor cursor
      :pause-menu pause-menu
-     # XXX
-     #:start-music true
-     # XXX
-     #:level-music (assets :level1-music)
+     :start-music true
+     :level-music (assets :level1-music)
      :restart-menu  restart-menu
      :tilemap tilemap }
    :update update-level

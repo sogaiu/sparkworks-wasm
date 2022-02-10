@@ -18,7 +18,7 @@
 (defn- dark? [[_ _ light]] (not light))
 (defn- light? [[_ _ light]] light)
 
-(defn- lit-key? [tilemap x y] 
+(defn- lit-key? [tilemap x y]
   (and
     (get-in tilemap [:key-map [x y]])
     (light? (or (get-in tilemap [:state [x y]]) [0 0 false]))))
@@ -27,7 +27,7 @@
   (seq [[dx dy bit] :in dirs
         :let [px (+ x dx) py (+ y dy)
               pt (get-in tilemap [:state [px py]])
-              ] 
+              ]
         :when (and pt (dark? pt)) ]
     [px py bit]))
 
@@ -35,13 +35,13 @@
   (seq [[dx dy bit] :in dirs
         :let [px (+ x dx) py (+ y dy)
               pt (get-in tilemap [:state [px py]])
-              ] 
+              ]
         :when (and pt (light? pt)) ]
     [px py bit]))
 
-(defn- bitmap-point [tilemap x y] 
+(defn- bitmap-point [tilemap x y]
   (var bitmap 0)
-  (each [px py bit] (set-around-point tilemap x y) 
+  (each [px py bit] (set-around-point tilemap x y)
       (+= bitmap bit))
   bitmap)
 
@@ -68,7 +68,7 @@
     (put-in tilemap [:state [px py]] [true bitmap light]))
   tilemap)
 
-(defn- lock-point [tilemap x y] 
+(defn- lock-point [tilemap x y]
   (put-in tilemap [:locked-tiles [x y]] true))
 
 (defn- set-target-tile [tilemap x y]
@@ -82,7 +82,7 @@
     (put-in tilemap [:state [px py]] [true bitmap light]))
   tilemap)
 
-(defn- toggle-point [tilemap x y] 
+(defn- toggle-point [tilemap x y]
   (if (get-in tilemap [:state [x y]])
     (do (clear-point tilemap x y))
     (do (set-point tilemap x y))))
@@ -91,16 +91,16 @@
 (defn dir-test [bitmap]
   (if (= 2r0000 bitmap) :none
     [
-     (when (= 2r0001 (band bitmap 2r0001)) :north) 
-     (when (= 2r0010 (band bitmap 2r0010)) :east) 
-     (when (= 2r0100 (band bitmap 2r0100)) :south) 
+     (when (= 2r0001 (band bitmap 2r0001)) :north)
+     (when (= 2r0010 (band bitmap 2r0010)) :east)
+     (when (= 2r0100 (band bitmap 2r0100)) :south)
      (when (= 2r1000 (band bitmap 2r1000)) :west)]))
 
 
-(defn place-tile [{:size [mx my] :center [cx cy]} x y] 
+(defn place-tile [{:size [mx my] :center [cx cy]} x y]
   [(+ (* mx x) cx) (+ (* my y) cy) mx my])
 
-(defn place-mouse [{:size [mx my] :center [cx cy]} x y] 
+(defn place-mouse [{:size [mx my] :center [cx cy]} x y]
   [(+ (* mx (math/trunc (/ x mx))) cx) (+ (* my (math/trunc (/ y mx))) cy) mx my])
 
 (defn pixel->tile [{:size [mx my] :center [cx cy]} x y]
@@ -143,7 +143,7 @@
    (length (keys (tilemap :key-map)))
    (length (filter |(lit-key? tilemap ;$) (keys (tilemap :state))))))
 
-(defn click-tilemap [tilemap player mx my] 
+(defn click-tilemap [tilemap player mx my]
   #(def thump-sound (tilemap :thump-sound))
   (def [sx sy] (get-in tilemap [:tileset :grid :size]))
   (def [x y] [(math/trunc (/ mx sx)) (math/trunc (/ my sy))])
@@ -156,13 +156,13 @@
   (def under-player (:on-tile player tilemap x y))
   (def has-room (> 2 (length lights)))
 
-  (when (or 
+  (when (or
           (and destroy? in-radius (not under-player))
-          (and create? in-radius under-player) 
+          (and create? in-radius under-player)
           (and create? in-radius has-room))
     #(play-sound thump-sound)
     (toggle-point tilemap x y)
-    (when destroy? 
+    (when destroy?
       (each [lx ly] lights
         (when (= 0 (length (light-around-point tilemap lx ly)))
           (dark-point tilemap lx ly))))
@@ -176,22 +176,21 @@
   (when-let [state (get-in tilemap [:state [x y]])]
     state))
 
-(defn init-tilemap [assets tileset initial-state] 
+(defn init-tilemap [assets tileset initial-state]
   (def tmap @{
     :tileset tileset
     :state @{}
     :locked-tiles @{}
     :key-map @{}
     :light-point light-point
-    :set-point set-point 
+    :set-point set-point
     :lock-point lock-point
     :unlit-remain unlit-remain
     :clear-point clear-point
     :test-coord test-coord
     :key-point set-target-tile
     :draw draw-tilemap
-    # XXX
-    #:thump-sound (assets :thump-sound)
+    :thump-sound (assets :thump-sound)
     :click click-tilemap
     })
   (each pt (keys initial-state)
@@ -206,7 +205,7 @@
   (nil nil :south nil)  # vert
   (:north nil :south nil) # vert
   (nil :east :south nil) #down-right
-  (:north :east :south nil) #right-tri 
+  (:north :east :south nil) #right-tri
   (nil nil nil :west)  #horiz
   (:north nil nil :west) #up-right
   (nil :east nil :west)  #horiz

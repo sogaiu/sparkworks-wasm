@@ -9,13 +9,11 @@
 (var- state nil)
 
 (defn switch-state [new-state]
-  # XXX
-  #(when-let [music (dyn :music)]
-  # XXX
-  #  (pause-music-stream music))
+  (when-let [music (dyn :music)]
+    (pause-music-stream music))
   (set state new-state))
 
-(defn run-game [assets] 
+'(defn run-game [assets]
   (put assets :start-menu/init start-menu/init)
   (put assets :level1/init level1/init)
   (setdyn :assets assets)
@@ -36,11 +34,9 @@
   (:draw state)
   (end-drawing))
 
-(defn start-game [assets] 
+(defn start-game [assets]
   (put assets :start-menu/init start-menu/init)
   (put assets :level1/init level1/init)
-  # XXX
-  #(setdyn :assets assets)
   (put root-env :assets assets)
   (set state (start-menu/init assets))
   (math/seedrandom (os/time)))
@@ -51,25 +47,25 @@
   (init-audio-device)
   (set-target-fps 60)
   (hide-cursor)
-  (def assets (load-assets)) 
+  (def assets (load-assets))
   (run-game assets))
 
 # XXX
 (set-trace-log-level :error)
 (init-window 1200 800 "Spark works")
-#(init-audio-device)
+(init-audio-device)
 #(set-target-fps 60)
 (hide-cursor)
-(def assets (load-assets)) 
+(def assets (load-assets))
 (put assets :start-menu/init start-menu/init)
 (put assets :level1/init level1/init)
-(setdyn :assets assets)
+(put root-env :assets assets)
 (set state (start-menu/init assets))
+(math/seedrandom (os/time))
 
 (def main-fiber
   (fiber/new
     (fn []
-      (math/seedrandom (os/time))
       (while (not (window-should-close))
         (:update state (get-frame-time) switch-state)
         (begin-drawing)
@@ -79,4 +75,4 @@
       (close-window)
       (cleanup-assets))
     :i))
-  
+
