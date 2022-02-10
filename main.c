@@ -33,6 +33,18 @@ void UpdateDrawFrame(void) {
   }
 }
 
+static Janet cfun_SetAudioStreamBufferSizeDefault(int32_t argc, Janet *argv) {
+    janet_fixarity(argc, 1);
+    unsigned int sampleRate = (unsigned) janet_getinteger(argv, 0);
+    SetAudioStreamBufferSizeDefault(sampleRate);
+    return janet_wrap_nil();
+}
+
+static JanetReg extra_cfuns[] = {
+    {"set-audio-stream-buffer-size-default", cfun_SetAudioStreamBufferSizeDefault, NULL},
+    {NULL, NULL, NULL}
+};
+
 int main(int argc, char** argv) {
   janet_init();
 
@@ -46,6 +58,8 @@ int main(int argc, char** argv) {
   janet_cfuns(core_env, NULL, text_cfuns);
   janet_cfuns(core_env, NULL, image_cfuns);
   janet_cfuns(core_env, NULL, threed_cfuns);
+  // extras
+  janet_cfuns(core_env, NULL, extra_cfuns);
 
   Janet ret;
 

@@ -54,6 +54,7 @@
 (set-trace-log-level :error)
 (init-window 1200 800 "Spark works")
 (init-audio-device)
+(set-audio-stream-buffer-size-default 16384)
 #(set-target-fps 60)
 (hide-cursor)
 (def assets (load-assets))
