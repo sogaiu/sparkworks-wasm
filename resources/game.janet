@@ -32,6 +32,7 @@
   (:update state (get-frame-time) switch-state)
   (begin-drawing)
   (:draw state)
+  (draw-fps 3 3)
   (end-drawing))
 
 (defn start-game [assets]

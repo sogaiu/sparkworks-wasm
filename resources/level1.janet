@@ -79,16 +79,18 @@
       assets
       (assets :tileset) @{}))
 
-  (loop [x :in (range 0 37) # 37
-         y :in (range 0 24) # 24
+  (loop [x :in (range 0 18) # 37
+         y :in (range 0 12) # 24
          :when (> 0.24 (math/random))]
     (:set-point tilemap x y)
     (:lock-point tilemap x y)
     (when (> 0.1 (math/random))
       (:key-point tilemap x y)))
 
-  (:set-point tilemap 0 0)
-  (:light-point tilemap 0 0)
+  (:set-point tilemap 100 100)
+  (:light-point tilemap 100 100)
+  # XXX
+  (:clear-point tilemap 0 0)
 
   (def cursor (assets :cursor))
   (def start-menu/init (assets :start-menu/init))
@@ -111,7 +113,7 @@
                     (fn [menu switch] (switch (start-menu/init assets))))]))
 
   {:state
-   @{:player (init-player assets 20 20)
+   @{:player (init-player assets 100 100)
      :cursor cursor
      :pause-menu pause-menu
      :start-music true
